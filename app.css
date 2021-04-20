@@ -1,0 +1,39 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	width: 100vw;
+	height: 95vh;
+}
+
+.card {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 60%;
+	height: 75%;
+	border: 1px solid red;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.content-header {
+	height: 10%;
+	width: 100%;
+	border: 1px solid green;
+	text-align: center;
+}
+
+.content-main {
+	height: 90%;
+	width: 100%;
+	border: 1px solid pink;
+}
+
+.item-style {
+	border: 1px solid purple;
+}
