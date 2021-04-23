@@ -21,6 +21,7 @@ function addListItem (evt) {
 
 	itemSibling = itemSibling.nextElementSibling;
 	editItemListener(itemSibling);
+	completeItemListener(itemSibling);
 }
 
 function addListItemButtons (item) {
@@ -73,6 +74,25 @@ function editItemListener (item) {
 				editItemListener(item);
 			}
 		});
+	});
+}
+
+function completeItemListener (item) {
+	item.childNodes[1].addEventListener('click', () => {
+		// Select the item
+		let specificItem = document.querySelector(`.${item.classList[0]}`);
+
+		// toggle CSS class to turn strikethrough on or off accordingly
+		specificItem.classList.toggle('toggle-text');
+
+		// If .toggle-text is currently applied, make inner text of complete button different
+		// Else, leave inner text as is
+		if (specificItem.classList.length === 2) {
+			item.childNodes[1].innerText = 'Undo';
+		}
+		else {
+			item.childNodes[1].innerText = 'Completed';
+		}
 	});
 }
 
