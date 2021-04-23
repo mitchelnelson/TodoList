@@ -13,7 +13,7 @@ function addListItem (evt) {
 	let whitespace = /^[\s][a-zA-Z0-9_\s-]+$/g;
 
 	let listItem = document.createElement('div');
-	listItem.setAttribute('class', `item-${itemCount}`);
+	listItem.setAttribute('class', `item-${itemCount} item-style`);
 
 	// if user doesn't enter anything, stop
 	if (!userEntry.value) {
@@ -37,11 +37,12 @@ function addListItem (evt) {
 
 	// call event listeners for each button
 	editItemListener(listItem);
-	completeItemListener(listItem);
-	deleteItemListener(listItem);
+	// completeItemListener(listItem);
+	// deleteItemListener(listItem);
 }
 
 function addListItemButtons (item) {
+	let buttonDiv = document.createElement('div');
 	let completeButton = document.createElement('button');
 	let editButton = document.createElement('button');
 	let deleteButton = document.createElement('button');
@@ -50,17 +51,21 @@ function addListItemButtons (item) {
 	editButton.innerText = 'Edit';
 	deleteButton.innerText = 'Delete';
 
-	item.appendChild(completeButton);
-	item.appendChild(editButton);
-	item.appendChild(deleteButton);
+	buttonDiv.setAttribute('class', 'buttons');
+
+	buttonDiv.appendChild(completeButton);
+	buttonDiv.appendChild(editButton);
+	buttonDiv.appendChild(deleteButton);
+	item.appendChild(buttonDiv);
 }
 
 function editItemListener (item) {
-	item.childNodes[2].addEventListener('click', () => {
+	let buttonContainer = item.lastChild;
+	buttonContainer.childNodes[1].addEventListener('click', () => {
 		// Save initial text entry; disable the complete button; rename the edit button;
-		let initialText = item.childNodes[0].textContent;
-		item.childNodes[1].setAttribute('disabled', true);
-		item.childNodes[2].innerText = 'Save';
+		let initialText = item.firstChild.textContent;
+		buttonContainer.childNodes[0].setAttribute('disabled', true);
+		buttonContainer.childNodes[1].innerText = 'Save';
 
 		// Create new input box
 		let flyInput = document.createElement('input');
@@ -68,7 +73,7 @@ function editItemListener (item) {
 		flyInput.setAttribute('value', initialText);
 
 		// Remove the previous text for the item and replace it with an input field
-		item.removeChild(item.childNodes[0]);
+		item.removeChild(item.firstChild);
 		item.prepend(flyInput);
 
 		// autofocus and set cursor to the end of the previous text
@@ -78,16 +83,16 @@ function editItemListener (item) {
 			.setSelectionRange(initialText.length, initialText.length);
 
 		// add new event listener to save the new input
-		item.childNodes[2].addEventListener('click', () => {
+		buttonContainer.childNodes[1].addEventListener('click', () => {
 			if (flyInput.value) {
 				// store the user's new input in a variable, remove the input field, and replace text
 				let newText = flyInput.value;
-				item.removeChild(item.childNodes[0]);
+				item.removeChild(item.firstChild);
 				item.prepend(newText);
 
 				// Restore the buttons and listen for edits again (i.e. save)
-				item.childNodes[1].removeAttribute('disabled');
-				item.childNodes[2].innerText = 'Edit';
+				buttonContainer.childNodes[0].removeAttribute('disabled');
+				buttonContainer.childNodes[1].innerText = 'Edit';
 				editItemListener(item);
 			}
 		});
