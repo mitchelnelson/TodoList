@@ -35,9 +35,9 @@ body {
 }
 
 .item-style {
-	height: 52.5px;
+	height: 55px;
 	display: flex;
-	justify-content: space-evenly;
+	justify-content: space-around;
 	align-items: center;
 }
 

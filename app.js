@@ -37,8 +37,8 @@ function addListItem (evt) {
 
 	// call event listeners for each button
 	editItemListener(listItem);
-	// completeItemListener(listItem);
-	// deleteItemListener(listItem);
+	completeItemListener(listItem);
+	deleteItemListener(listItem);
 }
 
 function addListItemButtons (item) {
@@ -100,7 +100,9 @@ function editItemListener (item) {
 }
 
 function completeItemListener (item) {
-	item.childNodes[1].addEventListener('click', () => {
+	let buttonContainer = item.lastChild;
+	console.dir(item);
+	buttonContainer.childNodes[0].addEventListener('click', () => {
 		// Select the item
 		let specificItem = document.querySelector(`.${item.classList[0]}`);
 
@@ -109,17 +111,20 @@ function completeItemListener (item) {
 
 		// If .toggle-text is currently applied, make inner text of complete button different
 		// Else, leave inner text as is
-		if (specificItem.classList.length === 2) {
-			item.childNodes[1].innerText = 'Undo';
+		if (specificItem.classList.length === 3) {
+			buttonContainer.childNodes[0].innerText = 'Undo';
+			buttonContainer.childNodes[1].setAttribute('disabled', true);
 		}
 		else {
-			item.childNodes[1].innerText = 'Completed';
+			buttonContainer.childNodes[0].innerText = 'Completed';
+			buttonContainer.childNodes[1].removeAttribute('disabled');
 		}
 	});
 }
 
 function deleteItemListener (item) {
-	item.childNodes[3].addEventListener('click', () => {
+	let buttonContainer = item.lastChild;
+	buttonContainer.childNodes[2].addEventListener('click', () => {
 		// query for list area and specific item passed to function; remove item from area.
 		let mainContent = document.getElementsByClassName('content-main');
 		let child = document.querySelector(`.${item.classList[0]}`);
