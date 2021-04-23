@@ -4,10 +4,12 @@ const listArea = document.querySelector('.content-main');
 
 let itemCount = 0;
 
-// Start listening for events by listening for clicks on the 'add item' button
+// Start listening for events by listening for clicks or enter key
 itemButton.addEventListener('click', addListItem);
+userEntry.addEventListener('submit', addListItem);
 
 function addListItem (evt) {
+	evt.preventDefault();
 	let whitespace = /^[\s][a-zA-Z0-9_\s-]+$/g;
 
 	let listItem = document.createElement('div');
