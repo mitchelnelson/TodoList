@@ -1,27 +1,42 @@
 const userEntry = document.getElementById('user-entry');
 const itemButton = document.getElementById('item-button');
 const listArea = document.querySelector('.content-main');
-let itemSibling = document.querySelector('.content-main div');
 
 let itemCount = 0;
 
+// Start listening for events by listening for clicks on the 'add item' button
 itemButton.addEventListener('click', addListItem);
 
 function addListItem (evt) {
+	let whitespace = /^[\s][a-zA-Z0-9_\s-]+$/g;
+
 	let listItem = document.createElement('div');
 	listItem.setAttribute('class', `item-${itemCount}`);
-	listItem.innerText = userEntry.value;
 
+	// if user doesn't enter anything, stop
+	if (!userEntry.value) {
+		return;
+	}
+
+	// if user enters a space at the beginning with text following, truncate whitespace
+	if (whitespace.test(userEntry.value)) {
+		userEntry.value = userEntry.value.trim();
+	}
+
+	// set new item's text value to be what the user entered, and increment counter variable
+	listItem.innerText = userEntry.value;
 	itemCount++;
 
+	// add buttons for the item, append it to the list, and then refocus the input field.
 	addListItemButtons(listItem);
 	listArea.appendChild(listItem);
 	userEntry.value = '';
 	userEntry.focus();
 
-	itemSibling = itemSibling.nextElementSibling;
-	editItemListener(itemSibling);
-	completeItemListener(itemSibling);
+	// call event listeners for each button
+	editItemListener(listItem);
+	completeItemListener(listItem);
+	deleteItemListener(listItem);
 }
 
 function addListItemButtons (item) {
@@ -93,6 +108,15 @@ function completeItemListener (item) {
 		else {
 			item.childNodes[1].innerText = 'Completed';
 		}
+	});
+}
+
+function deleteItemListener (item) {
+	item.childNodes[3].addEventListener('click', () => {
+		// query for list area and specific item passed to function; remove item from area.
+		let mainContent = document.getElementsByClassName('content-main');
+		let child = document.querySelector(`.${item.classList[0]}`);
+		mainContent[0].removeChild(child);
 	});
 }
 
