@@ -14,31 +14,46 @@ body {
 	transform: translate(-50%, -50%);
 	width: 60%;
 	height: 75%;
-	border: 1px solid red;
+	border: 3px solid #1d3557;
+	border-radius: 3%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	overflow: hidden;
 }
 
 .content-header {
 	height: 10%;
 	width: 100%;
-	border: 1px solid green;
+	background-color: #457b9d;
+	border-bottom: 3px solid #1d3557;
 	text-align: center;
 }
 
 .content-area {
 	height: 90%;
 	width: 100%;
-	border: 1px solid pink;
 }
 
 .entry-area {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 7.5%;
+	height: 50px;
+}
+
+form {
+	padding: 0 1rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+}
+
+#user-entry {
+	width: 90%;
+	height: 1.5rem;
 }
 
 .display-area {
@@ -47,21 +62,97 @@ body {
 
 .item-list,
 .button-list {
-	width: 50%;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-evenly;
+	justify-content: flex-start;
 	align-items: center;
 }
 
-.item-style {
-	height: 55px;
-	width: 100%;
+.item-list {
+	width: 75%;
+	padding-left: 1rem;
+}
+
+.button-list {
+	width: 25%;
+	padding-right: 1rem;
+}
+
+.item-list li,
+.button-list div {
 	display: flex;
-	justify-content: space-around;
 	align-items: center;
+	justify-content: flex-start;
+	height: 50px;
+	width: 100%;
+	border-top: 1px solid #1d3557;
+}
+
+.item-list li:last-child,
+.button-list div:last-child {
+	border-bottom: 1px solid #1d3557;
+}
+
+.button-list div {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.button-list div button {
+	margin-right: 1rem;
+	color: transparent;
+}
+
+.button-list div button:last-child {
+	margin-right: 0;
+	color: transparent;
+}
+
+ul {
+	margin: 0;
 }
 
 .toggle-text {
 	text-decoration: line-through;
+}
+
+/* ***********************************************  */
+
+button {
+	min-width: 2rem;
+	min-height: 2rem;
+}
+
+.complete-button,
+.edit-button,
+.delete-button {
+	background-repeat: no-repeat;
+	background-position: center;
+	border-radius: 20%;
+}
+
+#item-button {
+	background-image: url('icons/add.png');
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 4rem;
+	border-radius: 10%;
+}
+
+.complete-button {
+	background-image: url('icons/check1.png');
+}
+
+.edit-button {
+	background-image: url('icons/edit.png');
+}
+
+.delete-button {
+	background-image: url('icons/delete.png');
+}
+
+.complete-button:focus,
+.edit-button:focus,
+.delete-button:focus {
+	outline: transparent;
 }

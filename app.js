@@ -23,7 +23,7 @@ userEntry.addEventListener('keyup', () => {
 function addListItem (evt) {
 	evt.preventDefault();
 
-	let listDiv = document.createElement('div');
+	let listDiv = document.createElement('li');
 	let buttonDiv = document.createElement('div');
 	listDiv.setAttribute('class', `item-${itemCount}`);
 	buttonDiv.setAttribute('class', `item-${itemCount}-buttons`);
@@ -53,9 +53,9 @@ function addListItemButtons (item) {
 	let editButton = document.createElement('button');
 	let deleteButton = document.createElement('button');
 
-	completeButton.innerText = 'Completed';
-	editButton.innerText = 'Edit';
-	deleteButton.innerText = 'Delete';
+	completeButton.setAttribute('class', 'complete-button');
+	editButton.setAttribute('class', 'edit-button');
+	deleteButton.setAttribute('class', 'delete-button');
 
 	item.appendChild(completeButton);
 	item.appendChild(editButton);
