@@ -1,35 +1,35 @@
-const userEntry = document.getElementById('user-entry');
-const itemButton = document.getElementById('item-button');
-const listArea = document.querySelector('.item-list');
-const buttonArea = document.querySelector('.button-list');
+let userEntry = document.getElementById('user-entry');
+let itemButton = document.getElementById('item-button');
+let listArea = document.querySelector('.item-list');
+let buttonArea = document.querySelector('.button-list');
 
 let itemCount = 0;
+let whitespace = /^[\s]+$/;
 
 // Start listening for events by listening for clicks or enter key
 itemButton.addEventListener('click', addListItem);
 userEntry.addEventListener('submit', addListItem);
 
+// Ensure that user entry prohibits empty or whitespace submissions
+userEntry.addEventListener('keyup', () => {
+	if (whitespace.test(userEntry.value) || !userEntry.value) {
+		itemButton.setAttribute('disabled', true);
+	}
+	else {
+		itemButton.removeAttribute('disabled');
+	}
+});
+
 function addListItem (evt) {
 	evt.preventDefault();
-	let whitespace = /^[\s][a-zA-Z0-9_\s-]+$/g;
 
 	let listDiv = document.createElement('div');
 	let buttonDiv = document.createElement('div');
 	listDiv.setAttribute('class', `item-${itemCount}`);
 	buttonDiv.setAttribute('class', `item-${itemCount}-buttons`);
 
-	// if user doesn't enter anything, stop
-	if (!userEntry.value) {
-		return;
-	}
-
-	// if user enters a space at the beginning with text following, truncate whitespace
-	if (whitespace.test(userEntry.value)) {
-		userEntry.value = userEntry.value.trim();
-	}
-
 	// set new item's text value to be what the user entered, and increment counter variable
-	listDiv.innerText = userEntry.value;
+	listDiv.innerText = userEntry.value.trim();
 	itemCount++;
 
 	// add buttons for the item
@@ -67,7 +67,7 @@ function editItemListener (listDiv, buttonDiv) {
 		let flyInput = makeEdit(listDiv, buttonDiv);
 
 		flyInput.addEventListener('keyup', () => {
-			if (flyInput.value === '') {
+			if (whitespace.test(flyInput.value) || flyInput.value === '') {
 				listDiv.children[1].setAttribute('disabled', true);
 			}
 			else {
@@ -104,7 +104,7 @@ function makeEdit (listDiv, buttonDiv) {
 }
 
 function saveEdit (listDiv, buttonDiv, input) {
-	let initialText = input.value;
+	let initialText = input.value.trim();
 	listDiv.removeChild(listDiv.firstChild);
 	listDiv.removeChild(listDiv.lastChild);
 	listDiv.append(initialText);
