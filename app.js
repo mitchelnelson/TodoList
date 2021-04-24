@@ -1,6 +1,7 @@
 const userEntry = document.getElementById('user-entry');
 const itemButton = document.getElementById('item-button');
-const listArea = document.querySelector('.content-main');
+const listArea = document.querySelector('.item-list');
+const buttonArea = document.querySelector('.button-list');
 
 let itemCount = 0;
 
@@ -12,8 +13,10 @@ function addListItem (evt) {
 	evt.preventDefault();
 	let whitespace = /^[\s][a-zA-Z0-9_\s-]+$/g;
 
-	let listItem = document.createElement('div');
-	listItem.setAttribute('class', `item-${itemCount} item-style`);
+	let listDiv = document.createElement('div');
+	let buttonDiv = document.createElement('div');
+	listDiv.setAttribute('class', `item-${itemCount}`);
+	buttonDiv.setAttribute('class', `item-${itemCount}-buttons`);
 
 	// if user doesn't enter anything, stop
 	if (!userEntry.value) {
@@ -26,23 +29,26 @@ function addListItem (evt) {
 	}
 
 	// set new item's text value to be what the user entered, and increment counter variable
-	listItem.innerText = userEntry.value;
+	listDiv.innerText = userEntry.value;
 	itemCount++;
 
-	// add buttons for the item, append it to the list, and then refocus the input field.
-	addListItemButtons(listItem);
-	listArea.appendChild(listItem);
+	// add buttons for the item
+	addListItemButtons(buttonDiv);
+
+	// append both the item's name and the item's buttons to the divs in the display area
+	listArea.appendChild(listDiv);
+	buttonArea.appendChild(buttonDiv);
 	userEntry.value = '';
 	userEntry.focus();
 
 	// call event listeners for each button
-	editItemListener(listItem);
-	completeItemListener(listItem);
-	deleteItemListener(listItem);
+	editItemListener(listDiv, buttonDiv);
+	completeItemListener(listDiv, buttonDiv);
+	deleteItemListener(listDiv, buttonDiv);
 }
 
 function addListItemButtons (item) {
-	let buttonDiv = document.createElement('div');
+	// let buttonDiv = document.createElement('div');
 	let completeButton = document.createElement('button');
 	let editButton = document.createElement('button');
 	let deleteButton = document.createElement('button');
@@ -51,84 +57,94 @@ function addListItemButtons (item) {
 	editButton.innerText = 'Edit';
 	deleteButton.innerText = 'Delete';
 
-	buttonDiv.setAttribute('class', 'buttons');
-
-	buttonDiv.appendChild(completeButton);
-	buttonDiv.appendChild(editButton);
-	buttonDiv.appendChild(deleteButton);
-	item.appendChild(buttonDiv);
+	item.appendChild(completeButton);
+	item.appendChild(editButton);
+	item.appendChild(deleteButton);
 }
 
-function editItemListener (item) {
-	let buttonContainer = item.lastChild;
-	buttonContainer.childNodes[1].addEventListener('click', () => {
-		// Save initial text entry; disable the complete button; rename the edit button;
-		let initialText = item.firstChild.textContent;
-		buttonContainer.childNodes[0].setAttribute('disabled', true);
-		buttonContainer.childNodes[1].innerText = 'Save';
+function editItemListener (listDiv, buttonDiv) {
+	buttonDiv.children[1].addEventListener('click', () => {
+		let flyInput = makeEdit(listDiv, buttonDiv);
 
-		// Create new input box
-		let flyInput = document.createElement('input');
-		flyInput.setAttribute('id', 'fly-input');
-		flyInput.setAttribute('value', initialText);
-
-		// Remove the previous text for the item and replace it with an input field
-		item.removeChild(item.firstChild);
-		item.prepend(flyInput);
-
-		// autofocus and set cursor to the end of the previous text
-		document.getElementById('fly-input').focus();
-		document
-			.getElementById('fly-input')
-			.setSelectionRange(initialText.length, initialText.length);
-
-		// add new event listener to save the new input
-		buttonContainer.childNodes[1].addEventListener('click', () => {
-			if (flyInput.value) {
-				// store the user's new input in a variable, remove the input field, and replace text
-				let newText = flyInput.value;
-				item.removeChild(item.firstChild);
-				item.prepend(newText);
-
-				// Restore the buttons and listen for edits again (i.e. save)
-				buttonContainer.childNodes[0].removeAttribute('disabled');
-				buttonContainer.childNodes[1].innerText = 'Edit';
-				editItemListener(item);
+		flyInput.addEventListener('keyup', () => {
+			if (flyInput.value === '') {
+				listDiv.children[1].setAttribute('disabled', true);
 			}
+			else {
+				listDiv.children[1].removeAttribute('disabled');
+			}
+		});
+
+		listDiv.children[1].addEventListener('click', () => {
+			saveEdit(listDiv, buttonDiv, flyInput);
 		});
 	});
 }
 
-function completeItemListener (item) {
-	let buttonContainer = item.lastChild;
-	console.dir(item);
-	buttonContainer.childNodes[0].addEventListener('click', () => {
+function makeEdit (listDiv, buttonDiv) {
+	let initialText = listDiv.firstChild.textContent;
+	buttonDiv.children[0].setAttribute('disabled', true);
+	buttonDiv.children[1].setAttribute('disabled', true);
+
+	let flyInput = document.createElement('input');
+	flyInput.setAttribute('class', 'fly-input');
+	flyInput.setAttribute('value', initialText);
+
+	let flyButton = document.createElement('button');
+	flyButton.setAttribute('class', 'fly-button');
+	flyButton.innerText = 'Confirm';
+
+	listDiv.removeChild(listDiv.firstChild);
+	listDiv.append(flyInput);
+	listDiv.append(flyButton);
+	flyInput.focus();
+	flyInput.setSelectionRange(initialText.length, initialText.length);
+
+	return flyInput;
+}
+
+function saveEdit (listDiv, buttonDiv, input) {
+	let initialText = input.value;
+	listDiv.removeChild(listDiv.firstChild);
+	listDiv.removeChild(listDiv.lastChild);
+	listDiv.append(initialText);
+
+	buttonDiv.children[0].removeAttribute('disabled');
+	buttonDiv.children[1].removeAttribute('disabled');
+}
+
+function completeItemListener (listDiv, buttonDiv) {
+	buttonDiv.children[0].addEventListener('click', () => {
 		// Select the item
-		let specificItem = document.querySelector(`.${item.classList[0]}`);
+		let specificItem = document.querySelector(`.${listDiv.classList[0]}`);
 
 		// toggle CSS class to turn strikethrough on or off accordingly
 		specificItem.classList.toggle('toggle-text');
 
 		// If .toggle-text is currently applied, make inner text of complete button different
 		// Else, leave inner text as is
-		if (specificItem.classList.length === 3) {
-			buttonContainer.childNodes[0].innerText = 'Undo';
-			buttonContainer.childNodes[1].setAttribute('disabled', true);
+		if (specificItem.classList.length === 2) {
+			buttonDiv.children[0].innerText = 'Undo';
+			buttonDiv.children[1].setAttribute('disabled', true);
 		}
 		else {
-			buttonContainer.childNodes[0].innerText = 'Completed';
-			buttonContainer.childNodes[1].removeAttribute('disabled');
+			buttonDiv.children[0].innerText = 'Completed';
+			buttonDiv.children[1].removeAttribute('disabled');
 		}
 	});
 }
 
-function deleteItemListener (item) {
-	let buttonContainer = item.lastChild;
-	buttonContainer.childNodes[2].addEventListener('click', () => {
-		// query for list area and specific item passed to function; remove item from area.
-		let mainContent = document.getElementsByClassName('content-main');
-		let child = document.querySelector(`.${item.classList[0]}`);
-		mainContent[0].removeChild(child);
+function deleteItemListener (listDiv, buttonDiv) {
+	buttonDiv.children[2].addEventListener('click', () => {
+		// query for list/button areas and specific item passed to function; remove item from area.
+		let childItem = document.querySelector(`.${listDiv.classList[0]}`);
+		let childButtons = document.querySelector(
+			`.${listDiv.classList[0]}-buttons`
+		);
+
+		// remove children from their parent display areas
+		listArea.removeChild(childItem);
+		buttonArea.removeChild(childButtons);
 	});
 }
 

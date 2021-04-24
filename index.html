@@ -12,14 +12,18 @@
     <header class="content-header">
       <h3>To-do List</h3>
     </header>
-    <main class="content-main">
-      <div>
+    <main class="content-area">
+      <section class="entry-area">
         <form>
           <label for="user-entry">Enter an item:</label>
           <input type="text" name="item" id="user-entry" autofocus>
           <button type="submit" id="item-button">Add item</button>
         </form>
-      </div>
+      </section>
+      <section class="display-area">
+        <div class="item-list"></div>
+        <div class="button-list"></div>
+      </section>
     </main>
   </section>
   <script src="app.js"></script>
