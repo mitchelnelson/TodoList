@@ -1,30 +1,13 @@
 let userEntry = document.getElementById('user-entry');
 let itemButton = document.getElementById('item-button');
 let listArea = document.querySelector('.item-list');
-let listArea2 = document.querySelector('.item-list-2');
 let buttonArea = document.querySelector('.button-list');
 
 let itemCount = 0;
 
 // Start listening for events by listening for clicks or enter key
-itemButton.addEventListener('click', evt => {
-	if (listArea.childElementCount <= 8) {
-		addListItem(evt, listArea);
-	}
-	else {
-		// Activate chevron class
-		addListItem(evt, listArea2);
-	}
-});
-userEntry.addEventListener('submit', evt => {
-	if (listArea.childElementCount <= 8) {
-		addListItem(evt, listArea);
-	}
-	else {
-		// activate chevron class
-		addListItem(evt, listArea2);
-	}
-});
+itemButton.addEventListener('click', addListItem);
+userEntry.addEventListener('submit', addListItem);
 
 // Ensure that user entry prohibits empty or whitespace submissions
 userEntry.addEventListener('keyup', () => {
@@ -52,7 +35,7 @@ function addListItem (evt, list) {
 	addListItemButtons(buttonDiv);
 
 	// append both the item's name and the item's buttons to the divs in the display area
-	list.appendChild(listDiv);
+	listArea.appendChild(listDiv);
 	buttonArea.appendChild(buttonDiv);
 	userEntry.value = '';
 	userEntry.focus();
@@ -78,9 +61,11 @@ function addListItemButtons (item) {
 }
 
 function editItemListener (listDiv, buttonDiv) {
+	// when the selected item's edit button is clicked, call makeEdit() on the item and store it in a variable
 	buttonDiv.children[1].addEventListener('click', () => {
 		let flyInput = makeEdit(listDiv, buttonDiv);
 
+		// listen for keyups on user's entries into input field; disable submit button if blank
 		flyInput.addEventListener('keyup', () => {
 			if (flyInput.value.trim() === '') {
 				listDiv.children[1].setAttribute('disabled', true);
@@ -90,6 +75,7 @@ function editItemListener (listDiv, buttonDiv) {
 			}
 		});
 
+		// when submit button is clicked, save entry by calling saveEdit() on the item
 		listDiv.children[1].addEventListener('click', () => {
 			saveEdit(listDiv, buttonDiv, flyInput);
 		});
@@ -97,17 +83,21 @@ function editItemListener (listDiv, buttonDiv) {
 }
 
 function makeEdit (listDiv, buttonDiv) {
+	// store the initial text of the item in a variable
 	let initialText = listDiv.firstChild.textContent;
 	buttonDiv.children[0].setAttribute('disabled', true);
 	buttonDiv.children[1].setAttribute('disabled', true);
 
+	// create an input box dynamically
 	let flyInput = document.createElement('input');
 	flyInput.setAttribute('class', 'fly-input');
 	flyInput.setAttribute('value', initialText);
 
+	// create a submit button dynamically
 	let flyButton = document.createElement('button');
 	flyButton.setAttribute('class', 'fly-button');
 
+	// remove the pre-existing text; append the new input field and submit button
 	listDiv.removeChild(listDiv.firstChild);
 	listDiv.append(flyInput);
 	listDiv.append(flyButton);
@@ -118,10 +108,11 @@ function makeEdit (listDiv, buttonDiv) {
 }
 
 function saveEdit (listDiv, buttonDiv, input) {
-	let initialText = input.value.trim();
+	// remove the input field and the submit button and replace it with the user's new text
+	let newText = input.value.trim();
 	listDiv.removeChild(listDiv.firstChild);
 	listDiv.removeChild(listDiv.lastChild);
-	listDiv.append(initialText);
+	listDiv.append(newText);
 
 	buttonDiv.children[0].removeAttribute('disabled');
 	buttonDiv.children[1].removeAttribute('disabled');
@@ -158,7 +149,3 @@ function deleteItemListener (listDiv, buttonDiv) {
 		buttonArea.removeChild(childButtons);
 	});
 }
-
-// function styleItem () {
-// 	listItem.classList.add('item-style');
-// }
