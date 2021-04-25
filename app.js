@@ -125,6 +125,7 @@ function completeItemListener (listDiv, buttonDiv) {
 
 		// toggle CSS class to turn strikethrough on or off accordingly
 		specificItem.classList.toggle('toggle-text');
+		buttonDiv.children[0].classList.toggle('change-icon');
 
 		// If .toggle-text is currently applied, disable edit button
 		if (specificItem.classList.length === 2) {

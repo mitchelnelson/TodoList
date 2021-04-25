@@ -111,8 +111,14 @@ ul {
 	margin: 0;
 }
 
+/* ***********************************************  */
+
 .toggle-text {
 	text-decoration: line-through;
+}
+
+.change-icon.change-icon {
+	background-image: url('icons/finished.png');
 }
 
 /* ***********************************************  */
