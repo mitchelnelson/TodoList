@@ -48,7 +48,6 @@ function addListItem (evt) {
 }
 
 function addListItemButtons (item) {
-	// let buttonDiv = document.createElement('div');
 	let completeButton = document.createElement('button');
 	let editButton = document.createElement('button');
 	let deleteButton = document.createElement('button');
@@ -92,7 +91,6 @@ function makeEdit (listDiv, buttonDiv) {
 
 	let flyButton = document.createElement('button');
 	flyButton.setAttribute('class', 'fly-button');
-	flyButton.innerText = 'Confirm';
 
 	listDiv.removeChild(listDiv.firstChild);
 	listDiv.append(flyInput);
@@ -121,14 +119,11 @@ function completeItemListener (listDiv, buttonDiv) {
 		// toggle CSS class to turn strikethrough on or off accordingly
 		specificItem.classList.toggle('toggle-text');
 
-		// If .toggle-text is currently applied, make inner text of complete button different
-		// Else, leave inner text as is
+		// If .toggle-text is currently applied, disable edit button
 		if (specificItem.classList.length === 2) {
-			buttonDiv.children[0].innerText = 'Undo';
 			buttonDiv.children[1].setAttribute('disabled', true);
 		}
 		else {
-			buttonDiv.children[0].innerText = 'Completed';
 			buttonDiv.children[1].removeAttribute('disabled');
 		}
 	});
