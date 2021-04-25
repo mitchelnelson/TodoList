@@ -1,14 +1,31 @@
 let userEntry = document.getElementById('user-entry');
 let itemButton = document.getElementById('item-button');
 let listArea = document.querySelector('.item-list');
+let listArea2 = document.querySelector('.item-list-2');
 let buttonArea = document.querySelector('.button-list');
 
 let itemCount = 0;
 let whitespace = /^[\s]+$/;
 
 // Start listening for events by listening for clicks or enter key
-itemButton.addEventListener('click', addListItem);
-userEntry.addEventListener('submit', addListItem);
+itemButton.addEventListener('click', evt => {
+	if (listArea.childElementCount <= 8) {
+		addListItem(evt, listArea);
+	}
+	else {
+		// Activate chevron class
+		addListItem(evt, listArea2);
+	}
+});
+userEntry.addEventListener('submit', evt => {
+	if (listArea.childElementCount <= 8) {
+		addListItem(evt, listArea);
+	}
+	else {
+		// activate chevron class
+		addListItem(evt, listArea2);
+	}
+});
 
 // Ensure that user entry prohibits empty or whitespace submissions
 userEntry.addEventListener('keyup', () => {
@@ -20,7 +37,7 @@ userEntry.addEventListener('keyup', () => {
 	}
 });
 
-function addListItem (evt) {
+function addListItem (evt, list) {
 	evt.preventDefault();
 
 	let listDiv = document.createElement('li');
@@ -36,7 +53,7 @@ function addListItem (evt) {
 	addListItemButtons(buttonDiv);
 
 	// append both the item's name and the item's buttons to the divs in the display area
-	listArea.appendChild(listDiv);
+	list.appendChild(listDiv);
 	buttonArea.appendChild(buttonDiv);
 	userEntry.value = '';
 	userEntry.focus();
