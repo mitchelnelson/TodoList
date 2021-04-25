@@ -5,7 +5,6 @@ let listArea2 = document.querySelector('.item-list-2');
 let buttonArea = document.querySelector('.button-list');
 
 let itemCount = 0;
-let whitespace = /^[\s]+$/;
 
 // Start listening for events by listening for clicks or enter key
 itemButton.addEventListener('click', evt => {
@@ -29,7 +28,7 @@ userEntry.addEventListener('submit', evt => {
 
 // Ensure that user entry prohibits empty or whitespace submissions
 userEntry.addEventListener('keyup', () => {
-	if (whitespace.test(userEntry.value) || !userEntry.value) {
+	if (userEntry.value.trim() === '') {
 		itemButton.setAttribute('disabled', true);
 	}
 	else {
@@ -83,7 +82,7 @@ function editItemListener (listDiv, buttonDiv) {
 		let flyInput = makeEdit(listDiv, buttonDiv);
 
 		flyInput.addEventListener('keyup', () => {
-			if (whitespace.test(flyInput.value) || flyInput.value === '') {
+			if (flyInput.value.trim() === '') {
 				listDiv.children[1].setAttribute('disabled', true);
 			}
 			else {
